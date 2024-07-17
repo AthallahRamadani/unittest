@@ -1,5 +1,6 @@
 package unittest.unittest.service;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -23,8 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class CustomerServiceTest {
@@ -33,22 +33,29 @@ class CustomerServiceTest {
 
     @InjectMocks
     private CustomerServiceImpl customerServiceImpl;
+    private Customer customer;
+
+    @BeforeEach
+    public void setUp() {
+        customer = new Customer();
+        customer.setId(1);
+        customer.setName("Jokowi");
+        customer.setBirthDate(LocalDate.of(2010, 12, 22));
+    }
 
     @Test
     void create() {
         // Given
-        CustomerDto customerCreate = new CustomerDto("Jokowi", LocalDate.of(2010, 12, 22));
-        Customer mockedCustomer = new Customer(1, "Jokowi", LocalDate.of(2010, 12, 22));
-
-        given(customerRepo.save(any(Customer.class))).willReturn(mockedCustomer);
+        CustomerDto customerDto = new CustomerDto(customer.getName(), customer.getBirthDate());
+        given(customerRepo.save(any(Customer.class))).willReturn(customer);
 
         // When
-        Customer insertCustomer = customerServiceImpl.create(customerCreate);
+        Customer saveCustomer = customerServiceImpl.create(customerDto);
 
         // Then
-        assertNotNull(insertCustomer);
-        assertEquals("Jokowi", insertCustomer.getName());
-        assertEquals(LocalDate.of(2010, 12, 22), insertCustomer.getBirthDate());
+        assertNotNull(saveCustomer);
+        assertEquals(saveCustomer.getName(), customer.getName());
+        assertEquals(saveCustomer.getBirthDate(), customer.getBirthDate());
     }
 
     @Test
@@ -116,6 +123,7 @@ class CustomerServiceTest {
         Integer customerId = 1;
 
         // When
+        doNothing().when(customerRepo).deleteById(customerId);
         customerServiceImpl.deleteById(customerId);
 
         // Then
