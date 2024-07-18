@@ -13,49 +13,70 @@ import unittest.unittest.service.TransactionService;
 import unittest.unittest.utils.dto.TransactionDto;
 import unittest.unittest.utils.specification.TransactionSpecification;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class TransactionServiceImpl implements TransactionService {
     private final TransactionRepo transactionRepo;
     private final CustomerService customerService;
 
+
     @Override
-    public Transaction create(TransactionDto newTransaction) {
-        Customer customer = customerService.getById(newTransaction.getCustomerId());
+    public Transaction create(TransactionDto transactionDTO) {
+        validateTransactionDTO(transactionDTO);
+
+        Customer customer = customerService.getById(transactionDTO.getCustomerId());
         return transactionRepo.save(Transaction.builder()
-                .price(newTransaction.getPrice())
                 .customer(customer)
-                .productName(newTransaction.getProductName())
-                .quantity(newTransaction.getQuantity())
-                .build());
+                .productName(transactionDTO.getProductName())
+                .quantity(transactionDTO.getQuantity())
+                .price(transactionDTO.getPrice())
+                .build()
+        );
     }
 
     @Override
-    public Page<Transaction> getAll(Pageable pageable, String name) {
-        Specification<Transaction> spec = TransactionSpecification.getSpecification(name);
-        return transactionRepo.findAll(spec, pageable);
+    public List<Transaction> getAll() {
+        return transactionRepo.findAll();
     }
 
     @Override
     public Transaction getById(Integer id) {
-        return transactionRepo.findById(id).orElseThrow(() -> new RuntimeException("Transaction not found"));
+        return transactionRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Transaction not found"));
     }
 
     @Override
-    public Transaction updateById(Integer id, TransactionDto updatedTransaction) {
-        Customer customer = customerService.getById(updatedTransaction.getCustomerId());
-        Transaction transaction = getById(id);
+    public Transaction updateById(Integer id, TransactionDto transactionDTO) {
+        validateTransactionDTO(transactionDTO);
 
-        transaction.setCustomer(customer);
-        transaction.setPrice(updatedTransaction.getPrice());
-        transaction.setQuantity(updatedTransaction.getQuantity());
-        transaction.setProductName(updatedTransaction.getProductName());
+        Transaction foundTransaction = getById(id);
+        foundTransaction.setProductName(transactionDTO.getProductName());
+        foundTransaction.setQuantity(transactionDTO.getQuantity());
+        foundTransaction.setPrice(transactionDTO.getPrice());
 
-        return transactionRepo.save(transaction);
+        return transactionRepo.save(foundTransaction);
     }
 
     @Override
     public void deleteById(Integer id) {
-        transactionRepo.deleteById(id);
+        Transaction transaction = getById(id);
+        transactionRepo.delete(transaction);
+    }
+
+    private void validateTransactionDTO(TransactionDto transactionDTO) {
+        if (transactionDTO.getCustomerId() == null) {
+            throw new IllegalArgumentException("Customer ID cannot be null");
+        }
+        if (transactionDTO.getProductName() == null) {
+            throw new IllegalArgumentException("Product name cannot be null");
+        }
+        if (transactionDTO.getQuantity() == null) {
+            throw new IllegalArgumentException("Quantity cannot be null");
+        }
+        if (transactionDTO.getPrice() == null) {
+            throw new IllegalArgumentException("Price cannot be null");
+        }
     }
 }

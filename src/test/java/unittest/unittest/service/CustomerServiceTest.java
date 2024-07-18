@@ -59,7 +59,7 @@ class CustomerServiceTest {
     }
 
     @Test
-    void getAllPerson() {
+    void getAllCustomer() {
         // Given
         Customer customer1 = new Customer(1, "Budi", LocalDate.of(2010, 12, 12));
         Customer customer2 = new Customer(2, "Michael", LocalDate.of(2010, 11, 11));

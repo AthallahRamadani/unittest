@@ -43,7 +43,6 @@ public class TransactionServiceTests {
 
     @BeforeEach
     public void beforeEach() {
-//        MockitoAnnotations.openMocks(this);
         transactions = mock(List.class);
         transactionDTO = TransactionDto.builder()
                 .customerId(1)

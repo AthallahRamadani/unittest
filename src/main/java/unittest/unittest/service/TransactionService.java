@@ -1,20 +1,18 @@
 package unittest.unittest.service;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import unittest.unittest.model.Customer;
 import unittest.unittest.model.Transaction;
-import unittest.unittest.utils.dto.CustomerDto;
 import unittest.unittest.utils.dto.TransactionDto;
 
-public interface TransactionService {
-    Transaction create(TransactionDto newTransaction);
+import java.util.List;
 
-    Page<Transaction> getAll(Pageable pageable, String name);
+public interface TransactionService {
+    Transaction create(TransactionDto transactionDTO);
+
+    List<Transaction> getAll();
 
     Transaction getById(Integer id);
 
-    Transaction updateById(Integer id, TransactionDto updatedTransaction);
+    Transaction updateById(Integer id, TransactionDto transactionDTO);
 
     void deleteById(Integer id);
 }

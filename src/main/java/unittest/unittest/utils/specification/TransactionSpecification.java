@@ -2,7 +2,6 @@ package unittest.unittest.utils.specification;
 
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
-import unittest.unittest.model.Customer;
 import unittest.unittest.model.Transaction;
 
 import java.util.ArrayList;
