@@ -10,6 +10,7 @@ import unittest.unittest.repository.CustomerRepo;
 import unittest.unittest.service.CustomerService;
 import unittest.unittest.utils.dto.CustomerDto;
 import unittest.unittest.utils.specification.CustomerSpecification;
+import unittest.unittest.utils.specification.TransactionSpecification;
 
 @Service
 @RequiredArgsConstructor
