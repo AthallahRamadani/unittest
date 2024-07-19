@@ -10,6 +10,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import unittest.unittest.model.Transaction;
 import unittest.unittest.service.TransactionService;
+import unittest.unittest.utils.dto.Todo;
 import unittest.unittest.utils.dto.TransactionDto;
 import unittest.unittest.utils.response.PageResponse;
 import unittest.unittest.utils.response.Response;
@@ -40,6 +41,21 @@ public class TransactionController {
     ) {
         return transactionService.getById(id);
     }
+
+    @GetMapping("/todos")
+    public List<Todo> test() {
+        return transactionService.getAllTodoFromJsonPlaceHolder();
+    }
+
+    @GetMapping("/todos/{id}")
+    public Todo test2(
+            @PathVariable Integer id
+    ) {
+        return transactionService.getOneTodoFromJsonPlaceHolder(id);
+    }
+
+
+
 
     @PutMapping("/{id}")
     public Transaction updateById(

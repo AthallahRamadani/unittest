@@ -17,4 +17,7 @@ public class Customer {
     private Integer id;
     private String name;
     private LocalDate birthDate;
+
+    @Column(name = "url_image")
+    private String url;
 }
